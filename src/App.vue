@@ -19,6 +19,7 @@ import Preferences from './components/Preferences.vue'
 import Profile from './components/Profile.vue'
 import Unsubscribe from './components/Unsubscribe.vue'
 import Survey from './components/Survey.vue'
+import { getURLParameter, validateEmail, PseudoBase64 } from './helpers/helpers.js'
 
 export default {
     name: 'app',
@@ -32,7 +33,29 @@ export default {
         }
     },
     mounted() {
-        this.email = 'my.mail@example.com'
+        var params = {};
+
+        params.auto = getURLParameter('auto');
+        params.iitt = PseudoBase64.decode(getURLParameter('iitt'));
+        params.e = atob(getURLParameter('e'));
+        
+        if (params.auto === 'true') {
+            if (validateEmail(params.e)) {
+                this.email = params.e;
+                exponea.identify(this.email.toLowerCase());
+                this.tab = 'unsubscribe';
+            } else if (validateEmail(params.iitt)) {
+                this.email = params.iitt;
+                this.tab = 'unsubscribe';
+            }
+        }
+
+        if (validateEmail(params.e)) {
+            this.email = params.e;
+            exponea.identify(this.email.toLowerCase());
+        } else if (validateEmail(params.iitt)) {
+            this.email = params.iitt;
+        }
     }
 }
 </script>

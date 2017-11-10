@@ -12,9 +12,63 @@ function selectorSafe(name) {
     });
 }
 
+function getURLParameter(name) {
+    return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search) || [null, ''])[1].replace(/\+/g, '%20')) || null;
+}
+var PseudoBase64 = {
+    _TRANSLATION_FROM: 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=',
+    _TRANSLATION_TO: '1BGFYekyHP0tx4OKnQCIoUfMbhRaVEqrzLN._su96W5g3AcvXpZDlJdj78-mSi2wT',
+    maketrans: function (intab, outtab) {
+        var trantab = [];
+        for(var i = 0; i < intab.length; i++) {
+            trantab.push([intab[i], outtab[i]]);
+        }
+        return trantab;
+    },
+    translate: function(str, trantab) {
+        var duplicated = [];
+        for(var i = 0; i < str.length; i++) {
+            duplicated.push([str[i], false]);
+        }
+        for(var i = 0; i < trantab.length; i++) {
+            for(var j = 0; j < duplicated.length; j++) {
+                if(!duplicated[j][1]) {
+                    if(duplicated[j][0] == trantab[i][0]) {
+                        duplicated[j][0] = trantab[i][1];
+                        duplicated[j][1] = true;
+                    }
+                }
+            }
+        }
+        var translated = "";
+        for(var i = 0; i < duplicated.length; i++) {
+            translated += duplicated[i][0];
+        }
+        return translated;
+    },
+    encode: function(token) {
+        var encoded = btoa("registered:" + token);
+        var TRANSLATION_TABLE_ENCRYPT = this.maketrans(this._TRANSLATION_FROM, this._TRANSLATION_TO);
+        var translated = this.translate(encoded, TRANSLATION_TABLE_ENCRYPT);
+        var URIencoded = encodeURIComponent(translated);
+
+        return URIencoded;
+    },
+    decode: function(URIencoded) {
+        var URIdecoded = decodeURIComponent(URIencoded);
+        var TRANSLATION_TABLE_DENCRYPT = this.maketrans(this._TRANSLATION_TO, this._TRANSLATION_FROM);
+        var translated = this.translate(URIdecoded, TRANSLATION_TABLE_DENCRYPT);
+        var decoded = atob(translated);
+
+        return decoded.split(':')[1];
+    }
+}
+
 export {
-	validateEmail,
-	selectorSafe
+    validateEmail,
+    selectorSafe,
+    getURLParameter,
+    PseudoBase64
 } 
 
 

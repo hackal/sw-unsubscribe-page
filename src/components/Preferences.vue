@@ -33,8 +33,19 @@ export default {
 
             if (validateEmail(this.email)) {
                 this.$emit('update:tab', 'profile');
+                var payload = {
+                    email: this.email.toLowerCase(),
+                };
 
-                // exponea track
+                if (this.name !== '') {
+                    payload.first_name = this.name;
+                }
+
+                if (this.surname !== '') {
+                    payload.last_name = this.surname;
+                }
+            
+                exponea.update(payload);
             } else {
                 this.error = true;
             }
