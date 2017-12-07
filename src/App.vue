@@ -42,7 +42,7 @@ export default {
         if (params.auto === 'true') {
             if (validateEmail(params.e)) {
                 this.email = params.e;
-                exponea.identify(this.email.toLowerCase());
+                // exponea.identify(this.email.toLowerCase());
                 this.tab = 'unsubscribe';
             } else if (validateEmail(params.iitt)) {
                 this.email = params.iitt;
@@ -52,7 +52,7 @@ export default {
 
         if (validateEmail(params.e)) {
             this.email = params.e;
-            exponea.identify(this.email.toLowerCase());
+            // exponea.identify(this.email.toLowerCase());
         } else if (validateEmail(params.iitt)) {
             this.email = params.iitt;
         }
