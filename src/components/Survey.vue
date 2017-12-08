@@ -6,7 +6,7 @@
         <p class="error" v-if="error"><strong>There were errors recording your feedback, please try again later</strong></p>
         <p><strong>If you have a moment, please let us know why you unsubscribed:</strong></p>
 
-        <div class="fieldset" v-for="choice in choices">
+        <div class="fieldset" v-for="choice in choices" :key="safe(choice.question)">
             <input :id="safe(choice.question)" type="radio" v-model="selection" v-bind:value="choice.value">
             <label :for="safe(choice.question)">{{ choice.question }}</label>
         </div>
